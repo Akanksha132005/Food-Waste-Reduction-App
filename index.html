@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Food Donation Hub</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('https://img.freepik.com/free-photo/3d-render-network-communications-background-with-plexus-design_1048-13022.jpg') no-repeat center center fixed;
+      background-size: cover;
+      padding: 2rem;
+      max-width: 600px;
+      margin: auto;
+      backdrop-filter: brightness(0.9);
+    }
+    h1 { text-align: center; color: #fff; text-shadow: 1px 1px 4px #000; }
+    textarea, input {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    .btn {
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .btn-post { background-color: #3498db; color: white; }
+    .btn-post:hover { background-color: #2980b9; }
+    .btn-link {
+      background-color: #27ae60;
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 1rem;
+      text-align: center;
+      padding: 0.6rem 1.2rem;
+    }
+    .post-card {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #ddd;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Donor Dashboard</h1>
+
+  <textarea id="foodDetails" placeholder="Describe the food..."></textarea>
+  <input type="time" id="pickupTime" placeholder="Preferred pickup time (e.g., 5–6 PM)">
+  <button class="btn btn-post" onclick="postFood()">Post Food</button>
+  <button class="btn btn-link" style="background-color: #e74c3c;" onclick="clearData()">Clear All Data</button>
+
+  <a href="ngo-login.html" class="btn btn-link">NGO Login</a>
+
+  <div id="postsContainer"></div>
+
+  <script>
+    const posts = JSON.parse(localStorage.getItem('foodPosts')) || [];
+
+    function postFood() {
+      const foodDetails = document.getElementById('foodDetails').value.trim();
+      const pickupTime = document.getElementById('pickupTime').value.trim();
+
+      if (!foodDetails || !pickupTime) {
+        alert('Please fill all fields.');
+        return;
+      }
+
+      const post = { id: Date.now(), foodDetails, pickupTime, saved: false };
+      posts.unshift(post);
+      localStorage.setItem('foodPosts', JSON.stringify(posts));
+      document.getElementById('foodDetails').value = '';
+      document.getElementById('pickupTime').value = '';
+      renderPosts();
+    }
+
+    function renderPosts() {
+      const container = document.getElementById('postsContainer');
+      container.innerHTML = posts.map(p => `
+        <div class="post-card">
+          <p><strong>Food:</strong> ${p.foodDetails}</p>
+          <p><strong>Pickup:</strong> ${p.pickupTime}</p>
+        </div>
+      `).join('');
+    }
+
+      function clearData() {
+  if (confirm('Are you sure you want to clear all donor data?')) {
+    localStorage.removeItem('foodPosts');
+    location.reload();
+  }
+}
+
+
+    renderPosts();
+  </script>
+
+</body>
+</html>

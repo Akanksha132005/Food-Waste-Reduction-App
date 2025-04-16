@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Donor Posts</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url('https://img.freepik.com/free-photo/3d-abstract-network-communications-background-with-plexus-design_1048-16800.jpg?uid=R163961248&ga=GA1.1.273593865.1744788322&semt=ais_hybrid&w=740') no-repeat center center fixed;
+      background-size: cover;
+      padding: 2rem;
+      max-width: 700px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      color: white;
+      text-shadow: 1px 1px 4px black;
+    }
+    .post-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #ddd;
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .btn-contact {
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .contact-info {
+      display: none;
+      margin-top: 0.75rem;
+      background: #f8f8f8;
+      border-radius: 8px;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+    }
+    .contact-info p {
+      margin: 0.4rem 0;
+    }
+    .clear-btn {
+      background-color: #c0392b;
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Available Donor Posts</h2>
+  <button class="clear-btn" onclick="clearAll()">Clear All Data</button>
+
+  <div id="donorPosts"></div>
+
+  <script>
+    const user = localStorage.getItem('ngoUser');
+    const posts = JSON.parse(localStorage.getItem('foodPosts')) || [];
+
+    if (!user) {
+      alert('Please log in as an NGO.');
+      window.location.href = 'ngo-login.html';
+    }
+
+    const container = document.getElementById('donorPosts');
+    container.innerHTML = posts.length ? posts.map((post, index) => `
+      <div class="post-card">
+        <p><strong>Food:</strong> ${post.foodDetails}</p>
+        <p><strong>Pickup Time:</strong> ${post.pickupTime}</p>
+        <button class="btn-contact" onclick="toggleContact(${index})">Connect</button>
+        <div class="contact-info" id="contact-${index}">
+          <p>📞 Phone: <a href="tel:+1234567890">+91 9322893263</a></p>
+          <p>📧 Gmail: <a href="mailto:donor.foodshare@gmail.com">viveknandgirwar2@gmail.com</a></p>
+          <p>🟢 WhatsApp: <a href="https://wa.me/9322893263" target="_blank">Chat on WhatsApp</a></p>
+        </div>
+      </div>
+    `).join('') : '<p style="color:white;">No donor posts available.</p>';
+
+    function toggleContact(index) {
+      const contactBox = document.getElementById(`contact-${index}`);
+      contactBox.style.display = contactBox.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function clearAll() {
+      if (confirm('Clear all saved donor posts and NGO login info?')) {
+        localStorage.clear();
+        alert('All data cleared!');
+        location.href = 'index.html';
+      }
+    }
+  </script>
+
+</body>
+</html>
